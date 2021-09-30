@@ -65,7 +65,7 @@ func GetByUsername(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer jsonFile.Close()
-	json.NewEncoder(w).Encode(result)
+	json.NewEncoder(w).Encode(result.Follower)
 }
 
 func main() {
