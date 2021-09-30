@@ -1,4 +1,4 @@
-module github.com/7-Rohan/coba-golang-web-4
+module github.com/7-Rohan/HW-Server_Deployment
 
 go 1.16
 
