@@ -23,8 +23,6 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 func sammy(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	jsonUserUserid := vars["userid"]
-
 	jsonUser := map[string]JsonUserid{}
 
 	jsonFile, err := os.Open("json-HW.json")
@@ -36,15 +34,14 @@ func sammy(w http.ResponseWriter, r *http.Request) {
 
 	json.Unmarshal(byteValue, &jsonUser)
 
-	result := jsonUser[jsonUserUserid]
+	result := jsonUser["sammy"]
 	json.NewEncoder(w).Encode(result)
 }
 
 func main() {
-	r := mux.NewRouter()
 	port := os.Getenv("PORT")
-	r.HandleFunc("/", home)
-	r.HandleFunc("/{userid}", sammy)
+	http.HandleFunc("/", home)
+	http.HandleFunc("/sammy", sammy)
 	log.Print("Listening on:" + port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
