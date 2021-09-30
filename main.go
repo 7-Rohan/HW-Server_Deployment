@@ -8,8 +8,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
-	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -66,11 +64,8 @@ func GetByUsername(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	str := []string{"followers: ", strconv.Itoa(result.Follower)}
-	res := strings.Join(str, " ")
-
 	defer jsonFile.Close()
-	json.NewEncoder(w).Encode(res)
+	json.NewEncoder(w).Encode(result)
 }
 
 func main() {
