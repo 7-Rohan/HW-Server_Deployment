@@ -41,9 +41,10 @@ func sammy(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	r := mux.NewRouter()
 	port := os.Getenv("PORT")
-	http.HandleFunc("/", home)
-	http.HandleFunc("/{userid}", sammy)
+	r.HandleFunc("/", home)
+	r.HandleFunc("/{userid}", sammy)
 	log.Print("Listening on:" + port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
