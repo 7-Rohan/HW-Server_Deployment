@@ -8,8 +8,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/gorilla/mux"
 )
 
 type JsonUserid struct {
@@ -22,7 +20,6 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 func sammy(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
 	jsonUser := map[string]JsonUserid{}
 
 	jsonFile, err := os.Open("json-HW.json")
