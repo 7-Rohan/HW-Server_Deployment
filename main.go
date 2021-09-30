@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -21,7 +23,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "Welcome")
 }
 
-func sammy(w http.ResponseWriter, r *http.Request) {
+func GetByUserid(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	jsonUserUserid := vars["userid"]
 
@@ -37,14 +39,46 @@ func sammy(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(byteValue, &jsonUser)
 
 	result := jsonUser[jsonUserUserid]
+	defer jsonFile.Close()
 	json.NewEncoder(w).Encode(result)
+}
+
+func GetByUsername(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	jsonUserUsername := vars["username"]
+
+	jsonUsers := map[string]JsonUserid{}
+
+	jsonFile, err := os.Open("json-HW.json")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+
+	json.Unmarshal(byteValue, &jsonUsers)
+
+	var result JsonUserid
+
+	for _, v := range jsonUsers {
+		if v.Username == jsonUserUsername {
+			result = v
+		}
+	}
+
+	str := []string{"followers: ", strconv.Itoa(result.Follower)}
+	res := strings.Join(str, " ")
+
+	defer jsonFile.Close()
+	json.NewEncoder(w).Encode(res)
 }
 
 func main() {
 	r := mux.NewRouter()
 	port := os.Getenv("PORT")
 	r.HandleFunc("/", home)
-	r.HandleFunc("/{userid}", sammy)
+	r.HandleFunc("/{userid}", GetByUserid)
+	r.HandleFunc("/follower/{username}", GetByUsername)
 	http.Handle("/", r)
 	log.Print("Listening on:" + port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
